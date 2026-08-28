@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-function Signup({ setUser }) {
+function Signup({ setUser, apiBaseUrl }) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,7 +19,7 @@ function Signup({ setUser }) {
     setError('');
 
     try {
-      const res = await fetch('/api/signup', {
+      const res = await fetch(`${apiBaseUrl}/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -28,8 +28,7 @@ function Signup({ setUser }) {
 
       const data = await res.json();
       if (data.success) {
-        // Fetch user data
-        const meRes = await fetch('/api/me', { credentials: 'include' });
+        const meRes = await fetch(`${apiBaseUrl}/me`, { credentials: 'include' });
         const meData = await meRes.json();
         setUser(meData);
         navigate('/onboarding');

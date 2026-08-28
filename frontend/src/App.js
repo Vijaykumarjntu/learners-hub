@@ -10,9 +10,12 @@ import './App.css';
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  
+  const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
+  
   useEffect(() => {
-    fetch('/api/me', { credentials: 'include' })
+    // CHANGE THIS LINE - use API_BASE_URL
+    fetch(`${API_BASE_URL}/me`, { credentials: 'include' })
       .then(res => res.json())
       .then(data => {
         if (data.id) {
@@ -28,11 +31,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login setUser={setUser} />} />
-        <Route path="/signup" element={user ? <Navigate to="/onboarding" /> : <Signup setUser={setUser} />} />
-        <Route path="/onboarding" element={!user ? <Navigate to="/login" /> : <Onboarding user={user} setUser={setUser} />} />
-        <Route path="/dashboard" element={!user ? <Navigate to="/login" /> : <Dashboard user={user} setUser={setUser} />} />
-        <Route path="/workspace/:projectId" element={!user ? <Navigate to="/login" /> : <Workspace user={user} />} />
+        <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login setUser={setUser} apiBaseUrl={API_BASE_URL} />} />
+        <Route path="/signup" element={user ? <Navigate to="/onboarding" /> : <Signup setUser={setUser} apiBaseUrl={API_BASE_URL} />} />
+        <Route path="/onboarding" element={!user ? <Navigate to="/login" /> : <Onboarding user={user} setUser={setUser} apiBaseUrl={API_BASE_URL} />} />
+        <Route path="/dashboard" element={!user ? <Navigate to="/login" /> : <Dashboard user={user} setUser={setUser} apiBaseUrl={API_BASE_URL} />} />
+        <Route path="/workspace/:projectId" element={!user ? <Navigate to="/login" /> : <Workspace user={user} apiBaseUrl={API_BASE_URL} />} />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>

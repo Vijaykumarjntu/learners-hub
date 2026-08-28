@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
-function Workspace({ user }) {
+function Workspace({ user, apiBaseUrl }) {
   const { projectId } = useParams();
   const [project, setProject] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -12,7 +12,7 @@ function Workspace({ user }) {
 
   useEffect(() => {
     fetchWorkspaceData();
-    const interval = setInterval(fetchWorkspaceData, 5000); // Poll every 5s
+    const interval = setInterval(fetchWorkspaceData, 5000);
     return () => clearInterval(interval);
   }, [projectId]);
 
@@ -22,7 +22,7 @@ function Workspace({ user }) {
 
   const fetchWorkspaceData = async () => {
     try {
-      const res = await fetch(`/api/workspace/${projectId}`, { credentials: 'include' });
+      const res = await fetch(`${apiBaseUrl}/workspace/${projectId}`, { credentials: 'include' });
       const data = await res.json();
       setProject(data.project);
       setMessages(data.messages);
@@ -38,14 +38,14 @@ function Workspace({ user }) {
     if (!newMessage.trim()) return;
 
     try {
-      await fetch('/api/chat', {
+      await fetch(`${apiBaseUrl}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ projectId: parseInt(projectId), message: newMessage })
       });
       setNewMessage('');
-      fetchWorkspaceData(); // Refresh messages
+      fetchWorkspaceData();
     } catch (err) {
       console.error(err);
     }
@@ -60,7 +60,6 @@ function Workspace({ user }) {
 
   return (
     <div className="workspace-container">
-      {/* Top Bar */}
       <div className="workspace-topbar">
         <Link to="/dashboard" className="back-btn">← Back</Link>
         <span className="project-title">📝 {project.title}</span>
@@ -69,9 +68,7 @@ function Workspace({ user }) {
         </span>
       </div>
 
-      {/* Main Workspace */}
       <div className="workspace-main">
-        {/* Code Editor */}
         <div className="workspace-editor">
           <iframe
             src="https://codesandbox.io/embed/github?view=editor"
@@ -79,7 +76,6 @@ function Workspace({ user }) {
           />
         </div>
 
-        {/* Chat */}
         <div className="workspace-chat">
           <div className="chat-header">💬 Chat with your buddy</div>
           <div className="chat-messages">

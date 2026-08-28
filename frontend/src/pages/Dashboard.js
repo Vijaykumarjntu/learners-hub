@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
-function Dashboard({ user, setUser }) {
+function Dashboard({ user, setUser, apiBaseUrl }) {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ function Dashboard({ user, setUser }) {
 
   const fetchDashboard = async () => {
     try {
-      const res = await fetch('/api/dashboard', { credentials: 'include' });
+      const res = await fetch(`${apiBaseUrl}/dashboard`, { credentials: 'include' });
       const data = await res.json();
       setDashboardData(data);
     } catch (err) {
@@ -23,7 +23,7 @@ function Dashboard({ user, setUser }) {
   };
 
   const handleLogout = async () => {
-    await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+    await fetch(`${apiBaseUrl}/logout`, { method: 'POST', credentials: 'include' });
     setUser(null);
     navigate('/login');
   };
@@ -33,7 +33,7 @@ function Dashboard({ user, setUser }) {
     if (!url) return;
 
     try {
-      const res = await fetch('/api/submit', {
+      const res = await fetch(`${apiBaseUrl}/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -41,7 +41,7 @@ function Dashboard({ user, setUser }) {
       });
       const data = await res.json();
       if (data.success) {
-        fetchDashboard(); // Refresh
+        fetchDashboard();
       } else {
         alert(data.error || 'Submission failed');
       }
@@ -57,7 +57,6 @@ function Dashboard({ user, setUser }) {
 
   return (
     <div className="dashboard-container">
-      {/* Header */}
       <div className="dashboard-header">
         <div className="logo">🏕️ Tribe</div>
         <div className="user-info">
@@ -67,7 +66,6 @@ function Dashboard({ user, setUser }) {
         </div>
       </div>
 
-      {/* Buddy Section */}
       {hasBuddy ? (
         <div className="buddy-section">
           <div className="buddy-info">
@@ -90,7 +88,6 @@ function Dashboard({ user, setUser }) {
         </div>
       )}
 
-      {/* Projects */}
       <h2 style={{ marginBottom: '8px' }}>📚 Your Projects</h2>
       <p style={{ color: '#888', marginBottom: '20px' }}>
         Complete all 8 projects to become job-ready

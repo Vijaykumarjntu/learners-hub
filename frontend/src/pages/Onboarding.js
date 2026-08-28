@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function Onboarding({ user, setUser }) {
+function Onboarding({ user, setUser, apiBaseUrl }) {
   const [guild, setGuild] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ function Onboarding({ user, setUser }) {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/onboarding', {
+      const res = await fetch(`${apiBaseUrl}/onboarding`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -26,8 +26,7 @@ function Onboarding({ user, setUser }) {
 
       const data = await res.json();
       if (data.success) {
-        // Refresh user data
-        const meRes = await fetch('/api/me', { credentials: 'include' });
+        const meRes = await fetch(`${apiBaseUrl}/me`, { credentials: 'include' });
         const meData = await meRes.json();
         setUser(meData);
         navigate('/dashboard');

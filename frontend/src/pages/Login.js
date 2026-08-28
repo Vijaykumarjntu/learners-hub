@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-function Login({ setUser }) {
+function Login({ setUser, apiBaseUrl }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -12,7 +12,8 @@ function Login({ setUser }) {
     setError('');
 
     try {
-      const res = await fetch('/api/login', {
+      // ONLY CHANGE THIS LINE
+      const res = await fetch(`${apiBaseUrl}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
