@@ -14,7 +14,10 @@ const PORT = 5000;
 
 // ============ MIDDLEWARE ============
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'https://hub-nine-mu.vercel.app'
+  ],
   credentials: true
 }));
 app.use(express.json());
